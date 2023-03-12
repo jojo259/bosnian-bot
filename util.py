@@ -1,7 +1,14 @@
 import random
+import re
+import discord
+
+def getRandomEmoji():
+	with open('assets/emojis.txt', 'r', encoding = 'UTF-8') as emojisFile:
+		emojisFileStr = emojisFile.read()
+		return random.choice(emojisFileStr)
 
 def parseTag(tagStr):
-	targetId = re.search(r'<@[0-9]{1,}>', curMessageSplit[1])
+	targetId = re.search(r'<@[0-9]{1,}>', tagStr)
 	targetId = re.search(r'[0-9]{1,}', targetId.group()).group()
 	return targetId
 
