@@ -3,10 +3,11 @@ import random
 
 import discord
 
+import util
+
 async def commandSetName(self, curMessage, curMessageSplit):
 	
-	targetId = re.search(r'<@[0-9]{1,}>', curMessageSplit[1])
-	targetId = re.search(r'[0-9]{1,}', targetId.group()).group()
+	targetId = util.parseTag(curMessageSplit[1])
 
 	for curGuild in self.guilds:
 		targetUser = await curGuild.fetch_member(targetId)
