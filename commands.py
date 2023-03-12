@@ -10,13 +10,12 @@ async def commandSetName(self, curMessage, curMessageSplit):
 	targetId = util.parseTag(curMessageSplit[1])
 
 	for curGuild in self.guilds:
-		targetUser = await curGuild.fetch_member(targetId)
-		if targetUser != None:
+		targetMember = await curGuild.fetch_member(targetId)
+		if targetMember != None:
 			break
 
-	print(f'renaming user {targetUser.name} with id {targetUser.id} to {curMessageSplit[2]}')
+	util.renameMember(targetMember, curMessageSplit[2])
 
-	await targetUser.edit(nick = curMessageSplit[2])
 	await curMessage.reply('renamed')
 
 commandsList = {
