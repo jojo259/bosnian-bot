@@ -53,7 +53,7 @@ async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
 
 	unluckyUser = pickRandom(onlineUsers)
 	await unluckyUser.timeout_for(360)
-	await curMessage.reply(f"muted {curMember.name} for 5 minutes")
+	await curMessage.reply(f"muted {unluckyUser.name} for 5 minutes")
 
 commandsList = {
 	commandSetName: ['setname', 'name', 'rename', 'nick', 'renick', 'nickname', 'setnick'],
