@@ -29,7 +29,7 @@ async def commandPartyMode(self, curMessage, curMessageSplit):
 			for curMember in curGuild.members:
 				newName = getEmojiName()
 				try:
-					await curMember.renameMember(curMember, newName)
+					await util.renameMember(curMember, newName)
 					print(f'renaming user {curMember.name} with id {curMember.id} to {newName}')
 				except discord.errors.Forbidden as e:
 					print(f'cannot rename user {curMember.name} with id {curMember.id}')
@@ -51,7 +51,7 @@ async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
 			if curMember.status != 'offline' and not curMember.bot:
 				onlineUsers.append(curMember)
 
-	unluckyUser = pickRandom(onlineUsers)
+	unluckyUser = util.pickRandom(onlineUsers)
 	timeoutTime = random.randint(1, 360)
 	await unluckyUser.timeout_for(timeoutTime)
 	await curMessage.reply(f"muted {unluckyUser.name} for {timeoutTime} seconds")
