@@ -18,6 +18,14 @@ async def commandSetName(self, curMessage, curMessageSplit):
 
 	await curMessage.reply('renamed')
 
+async def commandResetNames(self, curMessage, curMessageSplit):
+
+	for curGuild in self.guilds:
+		for curMember in curGuild.members:
+			await util.renameMember(curMember, None)
+
+	await curMessage.reply('reset')
+
 async def commandPartyMode(self, curMessage, curMessageSplit):
 
 	def getEmojiName():
@@ -49,4 +57,5 @@ async def commandPartyMode(self, curMessage, curMessageSplit):
 commandsList = {
 	commandSetName: ['setname', 'name', 'rename', 'nick', 'renick', 'nickname', 'setnick'],
 	commandPartyMode: ['partymode', 'party'],
+	commandResetNames: ['resetnames', 'resetname', 'reset'],
 }
