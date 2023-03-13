@@ -1,8 +1,6 @@
 import re
 import random
-
 import discord
-
 import util
 
 async def commandSetName(self, curMessage, curMessageSplit):
@@ -46,7 +44,19 @@ async def commandPartyMode(self, curMessage, curMessageSplit):
 
 	await curMessage.reply('party')
 
+async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
+	onlineUsers=[]
+	for curGuild in self.guilds:
+		for curMember in curGuild.members:
+			if curMember.status != 'offline' and not curMember.bot:
+				onlineUsers.append(curMember)
+
+	unluckyUser = pickRandom(onlineUsers)
+	await unluckyUser.timeout_for(360)
+	await curMessage.reply(f"muted {curMember.name} for 5 minutes")
+
 commandsList = {
 	commandSetName: ['setname', 'name', 'rename', 'nick', 'renick', 'nickname', 'setnick'],
 	commandPartyMode: ['partymode', 'party'],
+	commandMuteRoulette: ['roulette', 'muteroulette']
 }

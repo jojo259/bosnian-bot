@@ -1,5 +1,6 @@
 import random
 import re
+import discord
 
 def getRandomEmoji():
 	with open('assets/emojis.txt', 'r', encoding = 'UTF-8') as emojisFile:
@@ -17,3 +18,6 @@ async def renameMember(curMember, newName):
 		print(f'renamed user {curMember.name} with id {curMember.id} to {newName}')
 	except discord.errors.Forbidden as e:
 		print(f'cannot rename user {curMember.name} with id {curMember.id}, forbidden')
+
+def pickRandom(listMembers):
+	return random.choice(listMembers)
