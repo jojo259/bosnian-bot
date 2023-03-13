@@ -2,6 +2,7 @@ import re
 import random
 import discord
 import util
+import datetime
 
 async def commandSetName(self, curMessage, curMessageSplit):
 	
@@ -52,9 +53,13 @@ async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
 				onlineUsers.append(curMember)
 
 	unluckyUser = util.pickRandom(onlineUsers)
-	timeoutTime = random.randint(1, 360)
-	await unluckyUser.timeout_for(timeoutTime)
-	await curMessage.reply(f"muted {unluckyUser.name} for {timeoutTime} seconds")
+	timeoutSeconds = random.randint(1, 60)
+	try:
+		await unluckyUser.timeout(datetime.timedelta(seconds = timeoutSeconds))
+	except discord.errors.Forbidden as e:
+		await curMessage.reply(f'tried to mute {unluckyUser.name} for {timeoutSeconds} seconds but forbidden :(')
+		return
+	await curMessage.reply(f'muted {unluckyUser.name} for {timeoutSeconds} seconds')
 
 async def commandResetNames(self, curMessage, curMessageSplit):
 	for curGuild in self.guilds:
