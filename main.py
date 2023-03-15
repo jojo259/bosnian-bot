@@ -37,13 +37,13 @@ class Bot(discord.Client):
 
 		curMessageSplit = curMessage.content.split()
 
-		for commandFunc, commandAliases in commands.commandsList.items():
+		for commandObj, commandAliases in commands.commandsList.items():
 			for curAlias in commandAliases:
 				if curMessageSplit[0][1:] == curAlias:
 					print(f'user {curMessage.author.name} with id {curMessage.author.id} sent command: {curMessage.content}')
 					async with curMessage.channel.typing():
 						try:
-							await commandFunc(self, curMessage, curMessageSplit)
+							await commandObj.execute(self, curMessage, curMessageSplit)
 						except Exception as e:
 							stackTraceStr = traceback.format_exc()
 							print(stackTraceStr)
