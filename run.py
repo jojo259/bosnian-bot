@@ -14,7 +14,12 @@ botToken = os.environ['bottoken']
 
 class Bot(discord.Client):
 
+	debugMode = False
+	if 'debug' in os.environ:
+		debugMode = True
 	commandPrefix = '.'
+	if debugMode:
+		commandPrefix = ','
 
 	async def on_message(self, curMessage):
 		curAuthor = curMessage.author
