@@ -50,6 +50,8 @@ async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
 
 	unluckyUser = random.choice(onlineUsers)
 	timeoutSeconds = random.randint(1, 60)
+	if random.randint(1, 5) == 1:
+		timeoutSeconds *= random.randint(1, 5)
 	try:
 		await unluckyUser.timeout(datetime.timedelta(seconds = timeoutSeconds))
 	except discord.errors.Forbidden as e:
