@@ -5,7 +5,7 @@ import util
 import datetime
 
 async def commandSetName(self, curMessage, curMessageSplit):
-	
+
 	targetId = util.parseTag(curMessageSplit[1])
 
 	for curGuild in self.guilds:
@@ -20,8 +20,8 @@ async def commandSetName(self, curMessage, curMessageSplit):
 async def commandPartyMode(self, curMessage, curMessageSplit):
 
 	def getEmojiName():
-		newName = util.getRandomEmoji()
-		for i in range(random.randint(1, 2)):
+		newName = ''
+		for i in range(random.randint(1, 3)):
 			newName += util.getRandomEmoji()
 		return newName
 
@@ -46,7 +46,7 @@ async def commandPartyMode(self, curMessage, curMessageSplit):
 	await curMessage.reply('party')
 
 async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
-	onlineUsers=[]
+	onlineUsers = []
 	for curGuild in self.guilds:
 		for curMember in curGuild.members:
 			if curMember.status != 'offline' and not curMember.bot:
