@@ -48,7 +48,7 @@ async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
 			if str(curMember.status) != 'offline' and not curMember.bot:
 				onlineUsers.append(curMember)
 
-	unluckyUser = util.pickRandom(onlineUsers)
+	unluckyUser = random.choice(onlineUsers)
 	timeoutSeconds = random.randint(1, 60)
 	try:
 		await unluckyUser.timeout(datetime.timedelta(seconds = timeoutSeconds))
