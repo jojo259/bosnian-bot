@@ -42,13 +42,18 @@ async def commandPartyMode(self, curMessage, curMessageSplit):
 	await curMessage.reply('party')
 
 async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
-	onlineUsers = []
+	onlineUsers = set()
 	for curGuild in self.guilds:
 		for curMember in curGuild.members:
 			if str(curMember.status) != 'offline' and not curMember.bot:
-				onlineUsers.append(curMember)
+				onlineUsers.add(curMember)
 
-	unluckyUser = random.choice(onlineUsers)
+	for curGuild in self.guilds:
+		for curVoiceChannel in curGuild.voice_channels:
+			for curMember in curVoiceChannel.members:
+				onlineUsers.add(curMember)
+
+	unluckyUser = random.choice(list(onlineUsers))
 	timeoutSeconds = random.randint(1, 60)
 	if random.randint(1, 5) == 1:
 		timeoutSeconds *= random.randint(1, 5)
