@@ -13,7 +13,7 @@ async def commandSetName(self, curMessage, curMessageSplit):
 		if targetMember != None:
 			break
 
-	util.renameMember(targetMember, curMessageSplit[2])
+	await util.renameMember(targetMember, curMessageSplit[2])
 
 	await curMessage.reply('renamed')
 
