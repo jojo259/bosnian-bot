@@ -46,9 +46,11 @@ class Bot(discord.Client):
 							print(stackTraceStr)
 							await curMessage.reply(f'errored:\n{stackTraceStr}')
 
-intents = discord.Intents.default()
-intents.presences = True
-intents.message_content = True
-intents.members = True
-bot = Bot(intents = intents)
-bot.run(botToken)
+if __name__ == '__main__':
+
+	intents = discord.Intents.default()
+	intents.presences = True
+	intents.message_content = True
+	intents.members = True
+	bot = Bot(intents = intents)
+	bot.run(botToken)
