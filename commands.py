@@ -29,11 +29,7 @@ async def commandPartyMode(self, curMessage, curMessageSplit):
 		for curGuild in self.guilds:
 			for curMember in curGuild.members:
 				newName = getEmojiName()
-				try:
-					await util.renameMember(curMember, newName)
-					print(f'renaming user {curMember.name} with id {curMember.id} to {newName}')
-				except discord.errors.Forbidden as e:
-					print(f'cannot rename user {curMember.name} with id {curMember.id}')
+				await util.renameMember(curMember, newName)
 	elif len(curMessageSplit) == 2:
 		targetId = util.parseTag(curMessageSplit[1])
 		for curGuild in self.guilds:
