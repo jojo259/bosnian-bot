@@ -45,7 +45,7 @@ async def commandMuteRoulette(self, curMessage, curMessageSplit=None):
 	onlineUsers = []
 	for curGuild in self.guilds:
 		for curMember in curGuild.members:
-			if curMember.status != 'offline' and not curMember.bot:
+			if str(curMember.status) != 'offline' and not curMember.bot:
 				onlineUsers.append(curMember)
 
 	unluckyUser = util.pickRandom(onlineUsers)
