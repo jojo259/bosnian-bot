@@ -21,6 +21,9 @@ class Bot(discord.Client):
 	if debugMode:
 		commandPrefix = ','
 
+	async def on_ready(self):
+		print(f'logged in as {self.user}')
+
 	async def on_message(self, curMessage):
 		curAuthor = curMessage.author
 		if curAuthor == self.user:
