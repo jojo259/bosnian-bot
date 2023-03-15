@@ -20,8 +20,7 @@ async def commandSetName(self, curMessage, curMessageSplit):
 async def commandPartyMode(self, curMessage, curMessageSplit):
 
 	def getEmojiName():
-		newName = util.getRandomEmoji()
-		while random.randint(1, 5) != 1:
+		for i in range(random.randint(1, 3)):
 			newName += util.getRandomEmoji()
 		return newName
 
