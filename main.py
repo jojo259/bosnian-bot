@@ -5,7 +5,7 @@ import traceback
 
 import discord
 
-import commands
+import commandslist
 import config
 
 class Bot(discord.Client):
@@ -36,7 +36,7 @@ class Bot(discord.Client):
 
 		curMessageSplit = curMessage.content.split()
 
-		for commandObj, commandAliases in commands.commandsList.items():
+		for commandObj, commandAliases in commandslist.commandsList.items():
 			for curAlias in commandAliases:
 				if curMessageSplit[0][1:] == curAlias:
 					print(f'user {curMessage.author.name} with id {curMessage.author.id} sent command: {curMessage.content}')
