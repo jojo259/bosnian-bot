@@ -13,6 +13,9 @@ class Bot(discord.Client):
 	debugMode = False
 	if 'debug' in os.environ:
 		debugMode = True
+		print('running in DEBUG mode')
+	else:
+		print('running in PRODUCTION mode')
 	commandPrefix = '.'
 	if debugMode:
 		commandPrefix = ','
