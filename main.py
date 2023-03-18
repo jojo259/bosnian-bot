@@ -24,8 +24,16 @@ class Bot(discord.Client):
 		print(f'logged in as {self.user}')
 
 	async def on_message(self, curMessage):
-		curAuthor = curMessage.author
-		if curAuthor == self.user:
+
+		if curMessage.author == self.user:
+			return
+
+		if curMessage.guild == None:
+			mainServer = await self.fetch_guild(config.mainServerId)
+			await curMessage.reply(f'bot only works in {mainServer.name}')
+			return
+
+		if curMessage.guild.id != config.mainServerId:
 			return
 
 		if len(curMessage.content) == 0:
