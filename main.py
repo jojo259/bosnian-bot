@@ -4,13 +4,9 @@ import os
 import traceback
 
 import discord
-import dotenv
 
 import commands
-
-dotenv.load_dotenv()
-
-botToken = os.environ['bottoken']
+import config
 
 class Bot(discord.Client):
 
@@ -56,4 +52,4 @@ if __name__ == '__main__':
 	intents.message_content = True
 	intents.members = True
 	bot = Bot(intents = intents)
-	bot.run(botToken)
+	bot.run(config.botToken)
