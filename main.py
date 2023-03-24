@@ -1,12 +1,9 @@
-print("init")
-
-import os
 import traceback
-
 import discord
-
 import commandslist
 import config
+
+print("init")
 
 class Bot(discord.Client):
 
@@ -14,11 +11,12 @@ class Bot(discord.Client):
 	if config.debugMode:
 		commandPrefix = ','
 
+
 	async def on_ready(self):
 		print(f'logged in as {self.user}')
 
-	async def on_message(self, curMessage):
 
+	async def on_message(self, curMessage):
 		if curMessage.author == self.user:
 			return
 
@@ -51,7 +49,6 @@ class Bot(discord.Client):
 							await curMessage.reply(f'errored:\n{stackTraceStr}')
 
 if __name__ == '__main__':
-
 	intents = discord.Intents.default()
 	intents.presences = True
 	intents.message_content = True

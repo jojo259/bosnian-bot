@@ -7,6 +7,7 @@ import command
 
 class CommandSetName(command.Command):
 
+
 	async def execute(self, bot, curMessage, curMessageSplit):
 		targetId = util.parseTag(curMessageSplit[1])
 
@@ -20,7 +21,9 @@ class CommandSetName(command.Command):
 
 class CommandPartyMode(command.Command):
 
+
 	async def execute(self, bot, curMessage, curMessageSplit):
+
 
 		def getEmojiName():
 			newName = ''
@@ -45,6 +48,7 @@ class CommandPartyMode(command.Command):
 		await curMessage.reply('party')
 
 class CommandMuteRoulette(command.Command):
+
 
 	async def execute(self, bot, curMessage, curMessageSplit):
 
@@ -71,6 +75,7 @@ class CommandMuteRoulette(command.Command):
 		await curMessage.reply(f'muted {unluckyUser.name} for {timeoutSeconds} seconds')
 
 class CommandResetNames(command.Command):
+
 
 	async def execute(self, bot, curMessage, curMessageSplit):
 
