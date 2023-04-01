@@ -3,6 +3,8 @@ import dotenv
 
 dotenv.load_dotenv()
 
+ephemeralChannelMessageLifetimeSeconds = 8
+
 debugMode = False
 if 'debug' in os.environ:
 	debugMode = True
@@ -12,3 +14,4 @@ else:
 
 botToken = os.environ['bottoken']
 mainServerId = int(os.environ['mainserverid'])
+ephemeralChannelId = int(os.environ['ephemeralchannelid'])

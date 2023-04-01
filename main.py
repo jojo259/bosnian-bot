@@ -2,6 +2,9 @@ import traceback
 import discord
 import commandslist
 import config
+from discord.ext import tasks
+import asyncio
+import datetime
 
 print("init")
 
@@ -14,9 +17,20 @@ class Bot(discord.Client):
 
 	async def on_ready(self):
 		print(f'logged in as {self.user}')
+		self.checkEphemeral.start()
 
 
 	async def on_message(self, curMessage):
+
+		if curMessage.channel.id == config.ephemeralChannelId:
+			await asyncio.sleep(config.ephemeralChannelMessageLifetimeSeconds)
+			print('deleting ephemeral message')
+			try:
+				await curMessage.delete()
+			except discord.errors.NotFound as e:
+				pass
+			return
+
 		if curMessage.author == self.user:
 			return
 
@@ -47,6 +61,31 @@ class Bot(discord.Client):
 							stackTraceStr = traceback.format_exc()
 							print(stackTraceStr)
 							await curMessage.reply(f'errored:\n{stackTraceStr}')
+
+
+	@tasks.loop(minutes = 1)
+	async def checkEphemeral(self):
+		try:
+			print('checking ephemeral')
+			ephemeralChannel = self.get_channel(config.ephemeralChannelId)
+			ephemeralMessages = []
+			async for curMessage in ephemeralChannel.history(limit = 100):
+				ephemeralMessages.append(curMessage)
+			for curMessage in reversed(ephemeralMessages):
+				messageTimestamp = curMessage.created_at
+				nowTimestamp = datetime.datetime.utcnow().replace(tzinfo = datetime.timezone.utc)
+				messageSentAgoSeconds = (nowTimestamp - messageTimestamp).total_seconds()
+				if messageSentAgoSeconds > config.ephemeralChannelMessageLifetimeSeconds:
+					print('deleting ephemeral message in checkEphemeral')
+					try:
+						await curMessage.delete()
+					except discord.errors.NotFound as e:
+						pass
+		except Exception as e:
+			stackTraceStr = traceback.format_exc()
+			print(stackTraceStr)
+			ephemeralChannel = self.get_channel(config.ephemeralChannelId)
+			await ephemeralChannel.send(stackTraceStr)
 
 if __name__ == '__main__':
 	intents = discord.Intents.default()
