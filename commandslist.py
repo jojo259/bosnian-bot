@@ -61,7 +61,8 @@ class CommandMuteRoulette(command.Command):
 		for curGuild in bot.guilds:
 			for curVoiceChannel in curGuild.voice_channels:
 				for curMember in curVoiceChannel.members:
-					onlineUsers.add(curMember)
+					if not curMember.bot:
+						onlineUsers.add(curMember)
 		if random.randint(1,2) == 1:
 			unluckyUser = curMessage.author
 		else:
