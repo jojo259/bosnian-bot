@@ -62,9 +62,12 @@ class CommandMuteRoulette(command.Command):
 			for curVoiceChannel in curGuild.voice_channels:
 				for curMember in curVoiceChannel.members:
 					onlineUsers.add(curMember)
-
-		unluckyUser = random.choice(list(onlineUsers))
+		if random.randint(1,2) == 1:
+			unluckyUser = curMessage.author
+		else:
+			unluckyUser = random.choice(list(onlineUsers))
 		timeoutSeconds = random.randint(1, 60)
+
 		if random.randint(1, 5) == 1:
 			timeoutSeconds *= random.randint(1, 5)
 		try:
