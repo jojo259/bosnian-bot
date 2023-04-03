@@ -24,7 +24,6 @@ class CommandPartyMode(command.Command):
 
 	async def execute(self, bot, curMessage, curMessageSplit):
 
-
 		def getEmojiName():
 			newName = ''
 			for i in range(random.randint(1, 3)):
@@ -51,22 +50,43 @@ class CommandMuteRoulette(command.Command):
 
 
 	async def execute(self, bot, curMessage, curMessageSplit):
-
 		onlineUsers = set()
-		for curGuild in bot.guilds:
-			for curMember in curGuild.members:
-				if str(curMember.status) != 'offline' and not curMember.bot:
-					onlineUsers.add(curMember)
-
-		for curGuild in bot.guilds:
-			for curVoiceChannel in curGuild.voice_channels:
-				for curMember in curVoiceChannel.members:
-					if not curMember.bot:
-						onlineUsers.add(curMember)
-		if random.randint(1,2) == 1:
-			unluckyUser = curMessage.author
-		else:
+		if len(curMessageSplit) >= 2:
+			onlineUsers.add(curMessage.author)
+			for i, j in enumerate(curMessageSplit):
+				if i == 0:
+					continue
+				try:
+					targetId = util.parseTag(str(j))
+				except:
+					await curMessage.reply(f'target not found :(')
+					return
+				for curGuild in bot.guilds:
+					targetMember = await curGuild.fetch_member(targetId)
+					if not targetMember.bot:
+						onlineUsers.add(targetMember)
+					else:
+						await curMessage.reply(f'bot found and ignored :(')
 			unluckyUser = random.choice(list(onlineUsers))
+
+		else:
+			for curGuild in bot.guilds:
+				for curMember in curGuild.members:
+					if str(curMember.status) != 'offline' and not curMember.bot:
+						onlineUsers.add(curMember)
+
+			for curGuild in bot.guilds:
+				for curVoiceChannel in curGuild.voice_channels:
+					for curMember in curVoiceChannel.members:
+						if not curMember.bot:
+							onlineUsers.add(curMember)
+
+			if random.randint(1,2) == 1:
+				unluckyUser = curMessage.author
+			else:
+				onlineUsers.remove(curMessage.author)
+				unluckyUser = random.choice(list(onlineUsers))
+
 		timeoutSeconds = random.randint(1, 60)
 
 		if random.randint(1, 5) == 1:
@@ -82,7 +102,6 @@ class CommandResetNames(command.Command):
 
 
 	async def execute(self, bot, curMessage, curMessageSplit):
-
 		for curGuild in bot.guilds:
 			for curMember in curGuild.members:
 				await util.renameMember(curMember, None)
