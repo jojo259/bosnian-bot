@@ -67,7 +67,6 @@ class CommandMuteRoulette(command.Command):
 						onlineUsers.add(targetMember)
 					else:
 						await curMessage.reply(f'bot found and ignored :(')
-			unluckyUser = random.choice(list(onlineUsers))
 
 		else:
 			for curGuild in bot.guilds:
@@ -81,11 +80,11 @@ class CommandMuteRoulette(command.Command):
 						if not curMember.bot:
 							onlineUsers.add(curMember)
 
-			if random.randint(1,2) == 1:
-				unluckyUser = curMessage.author
-			else:
-				onlineUsers.remove(curMessage.author)
-				unluckyUser = random.choice(list(onlineUsers))
+		if random.randint(1,2) == 1:
+			unluckyUser = curMessage.author
+		else:
+			onlineUsers.remove(curMessage.author)
+			unluckyUser = random.choice(list(onlineUsers))
 
 		timeoutSeconds = random.randint(1, 60)
 
