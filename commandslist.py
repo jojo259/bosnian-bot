@@ -5,6 +5,14 @@ import util
 import datetime
 import command
 import openairequester
+import chatgptreplacer
+
+class CommandSetReplacePrompt(command.Command):
+
+
+	async def execute(self, bot, curMessage, curMessageSplit):
+		chatgptreplacer.userReplacePrompts[curMessage.author.id] = ' '.join(curMessageSplit[1:])
+		await curMessage.reply('set')
 
 class CommandAskChatGpt(command.Command):
 
@@ -121,4 +129,5 @@ commandsList = {
 	CommandMuteRoulette(): ['roulette', 'muteroulette'],
 	CommandResetNames(): ['resetnames', 'resetname', 'reset'],
 	CommandAskChatGpt(): ['ask', 'chatgpt', 'query', 'question', 'q'],
+	CommandSetReplacePrompt(): ['setreplaceprompt', 'replaceprompt', 'setreplace', 'replace'],
 }

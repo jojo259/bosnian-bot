@@ -5,6 +5,7 @@ import config
 from discord.ext import tasks
 import asyncio
 import datetime
+import chatgptreplacer
 
 print("init")
 
@@ -21,6 +22,9 @@ class Bot(discord.Client):
 
 
 	async def on_message(self, curMessage):
+
+		if not curMessage.author.bot and not curMessage.content.startswith(self.commandPrefix):
+			await chatgptreplacer.checkReplace(curMessage)
 
 		if curMessage.channel.id == config.ephemeralChannelId:
 			await asyncio.sleep(config.ephemeralChannelMessageLifetimeSeconds)
