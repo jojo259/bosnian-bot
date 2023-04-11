@@ -129,5 +129,5 @@ commandsList = {
 	CommandMuteRoulette(): ['roulette', 'muteroulette'],
 	CommandResetNames(): ['resetnames', 'resetname', 'reset'],
 	CommandAskChatGpt(): ['ask', 'chatgpt', 'query', 'question', 'q'],
-	CommandSetReplacePrompt(): ['setreplaceprompt', 'replaceprompt', 'setreplace', 'replace'],
+	CommandSetReplacePrompt(): ['setreplaceprompt', 'replaceprompt', 'setreplace', 'replace', 'rewrite'],
 }
