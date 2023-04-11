@@ -4,6 +4,14 @@ import discord
 import util
 import datetime
 import command
+import openairequester
+
+class CommandAskChatGpt(command.Command):
+
+
+	async def execute(self, bot, curMessage, curMessageSplit):
+		apiResp = openairequester.doRequest(' '.join(curMessageSplit[1:]))
+		await curMessage.reply(apiResp[:2000])
 
 class CommandSetName(command.Command):
 
@@ -111,5 +119,6 @@ commandsList = {
 	CommandSetName(): ['setname', 'name', 'rename', 'nick', 'renick', 'nickname', 'setnick'],
 	CommandPartyMode(): ['partymode', 'party'],
 	CommandMuteRoulette(): ['roulette', 'muteroulette'],
-	CommandResetNames(): ['resetnames', 'resetname', 'reset']
+	CommandResetNames(): ['resetnames', 'resetname', 'reset'],
+	CommandAskChatGpt(): ['ask', 'chatgpt', 'query', 'question', 'q'],
 }
