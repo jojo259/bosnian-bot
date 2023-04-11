@@ -11,6 +11,10 @@ class CommandSetReplacePrompt(command.Command):
 
 
 	async def execute(self, bot, curMessage, curMessageSplit):
+		if len(curMessageSplit) == 1:
+			chatgptreplacer.userReplacePrompts.pop(curMessage.author.id, None)
+			await curMessage.reply('unset')
+			return
 		chatgptreplacer.userReplacePrompts[curMessage.author.id] = ' '.join(curMessageSplit[1:])
 		await curMessage.reply('set')
 
