@@ -1,4 +1,5 @@
 import openairequester
+import json
 
 userReplacePrompts = {}
 
@@ -7,11 +8,25 @@ async def checkReplace(curMessage):
 	if curMessage.author.id not in userReplacePrompts:
 		return
 
-	requestPrompt = f'Task: The user has requested that you rewrite this message using the prompt given below. Rewrite the message and respond with only the rewritten message. If you do not understand how to rewrite it or are unable to, then respond only with the word "error".\nUser prompt: {userReplacePrompts[curMessage.author.id]}\nUser name: {curMessage.author.name}\nUser message is as follows:\n{curMessage.content}'
+	requestPrompt = json.dumps(
+		{
+			'task': 'The user has requested that you rewrite this message using their instructions. Respond in JSON, with the format {"rewrittenMessage": "<message>"}. Do not respond with anything other than the JSON.',
+			'userInstructions': userReplacePrompts[curMessage.author.id],
+			'userName': curMessage.author.name,
+			'userMessage': curMessage.content,
+		}
+	)
 
 	print(requestPrompt)
 
-	replacedText = openairequester.doRequest(requestPrompt)
+	apiResp = openairequester.doRequest(requestPrompt)
+
+	try:
+		apiResp = json.loads(apiResp)['rewrittenMessage']
+	except json.decoder.JSONDecodeError as e:
+		print('decoding chatgpt replacer json failed')
+		await curMessage.reply(apiResp)
+		return
 
 	authorWebhook = None
 	channelWebhooks = await curMessage.channel.webhooks()
@@ -21,5 +36,5 @@ async def checkReplace(curMessage):
 
 	if authorWebhook == None:
 		authorWebhook = await curMessage.channel.create_webhook(name = 'bosnian-bot-user-mimic')
-	await authorWebhook.send(replacedText, username = curMessage.author.name, avatar_url = curMessage.author.display_avatar.url)
 	await curMessage.delete()
+	await authorWebhook.send(apiResp, username = curMessage.author.name, avatar_url = curMessage.author.display_avatar.url)
