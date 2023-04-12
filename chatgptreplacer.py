@@ -21,7 +21,7 @@ async def checkReplace(bot, curMessage):
 
 	print(requestPrompt)
 
-	apiResp = openairequester.doRequest(requestPrompt)
+	apiResp = openairequester.doRequest(requestPrompt, systemMessage = 'You must rewrite the message as the user requests. Follow the task given in the JSON.')
 
 	try:
 		apiResp = json.loads(apiResp)['rewrittenMessage']
