@@ -1,6 +1,7 @@
 import openairequester
 import json
 import regex as re
+import discord
 
 userReplacePrompts = {}
 
@@ -53,4 +54,4 @@ async def checkReplace(bot, curMessage):
 	if authorWebhook == None:
 		authorWebhook = await curMessage.channel.create_webhook(name = 'bosnian-bot-user-mimic')
 	await curMessage.delete()
-	await authorWebhook.send(apiResp, username = curMessage.author.name, avatar_url = curMessage.author.display_avatar.url)
+	await authorWebhook.send(apiResp, username = curMessage.author.name, avatar_url = curMessage.author.display_avatar.url, allowed_mentions = discord.AllowedMentions(users = True, roles = False, everyone = False))
