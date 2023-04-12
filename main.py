@@ -24,7 +24,7 @@ class Bot(discord.Client):
 	async def on_message(self, curMessage):
 
 		if not curMessage.author.bot and not curMessage.content.startswith(self.commandPrefix):
-			await chatgptreplacer.checkReplace(curMessage)
+			await chatgptreplacer.checkReplace(self, curMessage)
 
 		if curMessage.channel.id == config.ephemeralChannelId:
 			await asyncio.sleep(config.ephemeralChannelMessageLifetimeSeconds)

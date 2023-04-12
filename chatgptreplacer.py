@@ -1,9 +1,10 @@
 import openairequester
 import json
+import regex as re
 
 userReplacePrompts = {}
 
-async def checkReplace(curMessage):
+async def checkReplace(bot, curMessage):
 
 	if curMessage.author.id not in userReplacePrompts:
 		return
@@ -33,6 +34,21 @@ async def checkReplace(curMessage):
 	for curWebhook in channelWebhooks:
 		if curWebhook.name == 'bosnian-bot-user-mimic':
 			authorWebhook = curWebhook
+	
+	pattern = r"<@(\d+)>"
+	tags = re.findall(pattern, apiResp)
+	if len(tags) > 0:
+		for i in tags:
+			print(i)
+			for curGuild in bot.guilds:
+				try:
+					pattern = r"<@({})>"
+					user = await curGuild.fetch_member(i)
+					userPattern = pattern.format(i)
+					apiResp = re.sub(userPattern, f"{user.name}", apiResp)
+				except:
+					pass
+
 
 	if authorWebhook == None:
 		authorWebhook = await curMessage.channel.create_webhook(name = 'bosnian-bot-user-mimic')
