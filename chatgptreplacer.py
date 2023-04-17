@@ -25,10 +25,17 @@ async def checkReplace(bot, curMessage):
 
 	try:
 		apiResp = json.loads(apiResp)['rewrittenMessage']
-	except json.decoder.JSONDecodeError as e:
-		print('decoding chatgpt replacer json failed')
-		await curMessage.reply(apiResp)
-		return
+	except json.JSONDecodeError as e:
+		print(f'JSON Decode Error, attempting to fix JSON: {apiResp}')
+		foundJson = re.search(r'\{(.|\n)*\}', apiResp)
+		if foundJson:
+			print(f'Fixed JSON')
+			try:
+				apiResp = json.loads(foundJson.group())
+			except json.JSONDecodeError as e:
+				print('Could not fix JSON')
+				await curMessage.reply(apiResp)
+				return
 
 	authorWebhook = None
 	channelWebhooks = await curMessage.channel.webhooks()
