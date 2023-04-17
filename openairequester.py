@@ -3,12 +3,14 @@ import json
 
 import config
 
-def doRequest(userMessage, systemMessage = 'You are an assistant.'):
+def doRequest(messagesList):
 
-	reqMessages = [
-		{'role': 'system', 'content': systemMessage},
-		{'role': 'user', 'content': userMessage}
-	]
+	for message in messagesList:
+		if sorted(message.keys()) != sorted(['role', 'content']):
+			raise KeyError(f'Wrong keys in messagesList: {message.keys()}')
+		for value in message.values():
+			if not type(value) == str:
+				raise TypeError(f'Wrong type in messagesList values: {type(value)}')
 
 	reqHeaders = {
 		'Content-type': 'application/json',
@@ -17,7 +19,7 @@ def doRequest(userMessage, systemMessage = 'You are an assistant.'):
 
 	reqBody = {
 		'model': config.openAiGptModel,
-		'messages': reqMessages,
+		'messages': messagesList,
 		'temperature': 1,
 		'max_tokens': 1000,
 	}
@@ -26,7 +28,10 @@ def doRequest(userMessage, systemMessage = 'You are an assistant.'):
 
 	try:
 		reponseStr = apiReq.json()['choices'][0]['message']['content']
-	except Exception as e:
-		return apiReq.text
+	except Exception as e: # todo
+		return
 
 	return reponseStr
+
+def constructMessage(role, content):
+	return {'role': role, 'content': content}

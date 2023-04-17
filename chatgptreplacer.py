@@ -19,9 +19,11 @@ async def checkReplace(bot, curMessage):
 		}
 	)
 
-	print(requestPrompt)
+	print(f'replacing message by {curMessage.author.name}')
 
-	apiResp = openairequester.doRequest(requestPrompt, systemMessage = 'You must rewrite the message as the user requests. Follow the task given in the JSON.')
+	conversation = []
+	conversation.append(openairequester.constructMessage('system', requestPrompt))
+	apiResp = openairequester.doRequest(conversation)
 
 	try:
 		apiResp = json.loads(apiResp)['rewrittenMessage']
