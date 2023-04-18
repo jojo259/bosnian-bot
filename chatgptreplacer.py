@@ -33,7 +33,7 @@ async def checkReplace(bot, curMessage):
 		if foundJson:
 			print(f'Fixed JSON')
 			try:
-				apiResp = json.loads(foundJson.group())
+				apiResp = json.loads(foundJson.group())['rewrittenMessage']
 			except json.JSONDecodeError as e:
 				print('Could not fix JSON')
 				await curMessage.reply(apiResp)
