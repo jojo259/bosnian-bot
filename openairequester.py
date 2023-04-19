@@ -21,7 +21,7 @@ def doRequest(messagesList):
 		'model': config.openAiGptModel,
 		'messages': messagesList,
 		'temperature': 1,
-		'max_tokens': 1000,
+		'max_tokens': 250,
 	}
 
 	apiReq = requests.post('https://api.openai.com/v1/chat/completions', headers = reqHeaders, json = reqBody, timeout = 1000)
