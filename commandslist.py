@@ -23,7 +23,7 @@ class CommandAskChatGpt(command.Command):
 
 	async def execute(self, bot, curMessage, curMessageSplit):
 		conversation = []
-		conversation.append(openairequester.constructMessage('system', 'You are a helpful assistant.\nRespond very concisely.\nRespond with Discord markdown.'))
+		conversation.append(openairequester.constructMessage('system', 'You are a helpful assistant.\nRespond very concisely.\nRespond with Discord markdown.\nUse a lot of funny emojis and try to be quirky.'))
 		conversation.append(openairequester.constructMessage('user', ' '.join(curMessageSplit[1:])))
 		apiResp = openairequester.doRequest(conversation)
 		await curMessage.reply(apiResp[:2000])
