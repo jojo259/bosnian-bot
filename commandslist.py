@@ -106,7 +106,6 @@ class CommandMuteRoulette(command.Command):
 		if random.randint(1,2) == 1:
 			unluckyUser = curMessage.author
 		else:
-			onlineUsers.remove(curMessage.author)
 			unluckyUser = random.choice(list(onlineUsers))
 
 		timeoutSeconds = random.randint(1, 60)
