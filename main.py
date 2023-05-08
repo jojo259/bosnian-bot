@@ -6,6 +6,8 @@ from discord.ext import tasks
 import asyncio
 import datetime
 import chatgptreplacer
+import random
+import util
 
 print("init")
 
@@ -19,6 +21,7 @@ class Bot(discord.Client):
 	async def on_ready(self):
 		print(f'logged in as {self.user}')
 		self.checkEphemeral.start()
+		self.scrambleUsername.start()
 
 
 	async def on_message(self, curMessage):
@@ -90,6 +93,25 @@ class Bot(discord.Client):
 			print(stackTraceStr)
 			ephemeralChannel = self.get_channel(config.ephemeralChannelId)
 			await ephemeralChannel.send(stackTraceStr)
+
+
+	@tasks.loop(minutes = 1)
+	async def scrambleUsername(self):
+		if random.randint(1, 180) != 1:
+			return
+		print('scrambling username')
+		allMembers = []
+		for curGuild in bot.guilds:
+			if curGuild.id == config.mainServerId:
+				for curMember in curGuild.members:
+					allMembers.append(curMember)
+		target = random.choice(allMembers)
+		switchIndex = random.randint(0, len(target.display_name) - 2)
+		newName = target.display_name[:switchIndex]
+		newName += target.display_name[switchIndex + 1]
+		newName += target.display_name[switchIndex]
+		newName += target.display_name[switchIndex + 2:]
+		await util.renameMember(target, newName)
 
 if __name__ == '__main__':
 	intents = discord.Intents.default()
