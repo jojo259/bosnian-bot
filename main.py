@@ -95,7 +95,7 @@ class Bot(discord.Client):
 			await ephemeralChannel.send(stackTraceStr)
 
 
-	@tasks.loop(minutes = 1)
+	@tasks.loop(seconds = 1)
 	async def scrambleUsername(self):
 		if random.randint(1, 180) != 1:
 			return
