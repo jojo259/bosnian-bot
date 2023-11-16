@@ -10,6 +10,7 @@ import random
 import util
 import hashlib
 import string
+import urllib.parse
 
 print("init")
 
@@ -110,15 +111,15 @@ class Bot(discord.Client):
 				if guild.id == config.mainServerId:
 					for channel in guild.channels:
 						if channel.category and channel.category.name.lower() == 'anon' and channel.id != curMessage.channel.id:
-							await self.send_anon_msg_to_channel(channel, messageContent, anon_username)
+							await self.send_anon_msg_to_channel(channel, messageContent, anon_username, f'https://robohash.org/{urllib.parse.quote(user_hashid)}?set=set1&bgset=bg1')
 
 			# Delete the original message
 			await curMessage.delete()
 
 			# Send the message to the user's channel
-			await self.send_anon_msg_to_channel(curMessage.channel, messageContent, anon_username)
+			await self.send_anon_msg_to_channel(curMessage.channel, messageContent, anon_username, f'https://robohash.org/{urllib.parse.quote(user_hashid)}?set=set1&bgset=bg1')
 
-	async def send_anon_msg_to_channel(self, channel, content, username):
+	async def send_anon_msg_to_channel(self, channel, content, username, avatar_url):
 		webhook = self.webhook_cache.get(channel.id)
 		if not webhook:
 			print(f'cached webhook not found for {channel.name}, checking if it exists')
@@ -132,7 +133,7 @@ class Bot(discord.Client):
 				webhook = await channel.create_webhook(name=self.anonWebhookName)
 			self.webhook_cache[channel.id] = webhook
 		print(f'sending anon msg {content} to channel {channel.name}')
-		await webhook.send(content, username=username, avatar_url=f'https://robohash.org/{username}?set=set1&bgset=bg1')
+		await webhook.send(content, username=username, avatar_url=avatar_url)
 
 
 	@tasks.loop(minutes = 1)
