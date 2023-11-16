@@ -35,14 +35,13 @@ class Bot(discord.Client):
 
 	async def cache_webhooks(self):
 		for guild in self.guilds:
-			if guild.id == config.mainServerId:
-				for channel in guild.channels:
-					print(f'caching webhooks for channel {channel}')
-					if isinstance(channel, discord.TextChannel):  # Check if we are dealing with TextChannel which supports webhooks.
-						webhooks = await channel.webhooks()
-						for webhook in webhooks:
-							if webhook.name == self.anonWebhookName:
-								self.webhook_cache[channel.id] = webhook  # Cache the webhook for this channel
+			for channel in guild.channels:
+				print(f'caching webhooks for channel {channel}')
+				if isinstance(channel, discord.TextChannel):  # Check if we are dealing with TextChannel which supports webhooks.
+					webhooks = await channel.webhooks()
+					for webhook in webhooks:
+						if webhook.name == self.anonWebhookName:
+							self.webhook_cache[channel.id] = webhook  # Cache the webhook for this channel
 
 
 
@@ -67,11 +66,7 @@ class Bot(discord.Client):
 			return
 
 		if curMessage.guild == None:
-			mainServer = await self.fetch_guild(config.mainServerId)
-			await curMessage.reply(f'bot only works in {mainServer.name}')
-			return
-
-		if curMessage.guild.id != config.mainServerId:
+			await curMessage.reply(f'bot only works in servers')
 			return
 
 		if len(curMessage.content) == 0:
@@ -79,6 +74,11 @@ class Bot(discord.Client):
 
 		if curMessage.content[0] == self.commandPrefix:
 			curMessageSplit = curMessage.content.split()
+
+			if curMessage.content[len(self.commandPrefix):] == "anon":
+				print('handling anon command')
+				await self.handle_anon_command(curMessage)
+				return
 
 			for commandObj, commandAliases in commandslist.commandsList.items():
 				for curAlias in commandAliases:
@@ -105,10 +105,9 @@ class Bot(discord.Client):
 			# Send the message in all anon channels except the user's channel
 			print(f'sending anon msg {messageContent}')
 			for guild in self.guilds:
-				if guild.id == config.mainServerId:
-					for channel in guild.channels:
-						if channel.category and channel.category.name.lower() == 'anon' and channel.id != curMessage.channel.id:
-							await self.send_anon_msg_to_channel(channel, messageContent, anon_username, f'https://robohash.org/{urllib.parse.quote(user_hashid)}?set=set1&bgset=bg1')
+				for channel in guild.channels:
+					if channel.category and channel.category.name.lower() == 'anon' and channel.id != curMessage.channel.id and channel.name.startswith('anon_'):
+						await self.send_anon_msg_to_channel(channel, messageContent, anon_username, f'https://robohash.org/{urllib.parse.quote(user_hashid)}?set=set1&bgset=bg1')
 
 			# Delete the original message
 			await curMessage.delete()
@@ -119,6 +118,37 @@ class Bot(discord.Client):
 			return
 
 		await chatgptreplacer.checkReplace(self, curMessage)
+
+	async def handle_anon_command(self, curMessage):
+		if curMessage.guild.id != config.mainServerId:
+			await self.ensure_anon_channel(curMessage.author, curMessage.guild)
+		else:
+			await curMessage.reply("The .anon command is only for non-main servers.")
+
+	async def ensure_anon_channel(self, member, guild):
+		existing_category = None
+		for category in guild.categories:
+			if category.name.lower() == 'anon':
+				existing_category = category
+				break
+		if existing_category is None:
+			print(f'creating anon category for {guild.name}')
+			existing_category = await guild.create_category('anon')
+
+		channel_name = f'anon_{member.id}'
+		existing_channel = None
+		for channel in existing_category.channels:
+			if channel.name == channel_name:
+				existing_channel = channel
+				break
+		if existing_channel is None:
+			overwrites = {
+				guild.default_role: discord.PermissionOverwrite(read_messages=False),
+				member: discord.PermissionOverwrite(read_messages=True)
+			}
+			print(f'creating anon channel for {member.name}')
+			await guild.create_text_channel(channel_name, category=existing_category, overwrites=overwrites)
+
 
 	async def send_anon_msg_to_channel(self, channel, content, username, avatar_url):
 		webhook = self.webhook_cache.get(channel.id)
