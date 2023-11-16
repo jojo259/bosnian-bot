@@ -48,9 +48,6 @@ class Bot(discord.Client):
 
 	async def on_message(self, curMessage):
 
-		if not curMessage.author.bot and not curMessage.content.startswith(self.commandPrefix):
-			await chatgptreplacer.checkReplace(self, curMessage)
-
 		if curMessage.channel.id == config.ephemeralChannelId:
 			await asyncio.sleep(config.ephemeralChannelMessageLifetimeSeconds)
 			print('deleting ephemeral message')
@@ -118,6 +115,10 @@ class Bot(discord.Client):
 
 			# Send the message to the user's channel
 			await self.send_anon_msg_to_channel(curMessage.channel, messageContent, anon_username, f'https://robohash.org/{urllib.parse.quote(user_hashid)}?set=set1&bgset=bg1')
+
+			return
+
+		await chatgptreplacer.checkReplace(self, curMessage)
 
 	async def send_anon_msg_to_channel(self, channel, content, username, avatar_url):
 		webhook = self.webhook_cache.get(channel.id)
