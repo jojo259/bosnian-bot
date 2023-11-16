@@ -34,11 +34,17 @@ class Bot(discord.Client):
 			print('deleting ephemeral message')
 			try:
 				await curMessage.delete()
-			except discord.errors.NotFound as e:
+			except discord.errors.NotFound:
 				pass
 			return
 
 		if curMessage.author == self.user:
+			return
+
+		if curMessage.author.bot:
+			return
+
+		if curMessage.webhook_id:
 			return
 
 		if curMessage.guild == None:
