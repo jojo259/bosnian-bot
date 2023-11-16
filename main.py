@@ -30,8 +30,36 @@ class Bot(discord.Client):
 		print(f'logged in as {self.user}')
 		self.checkEphemeral.start()
 		self.scrambleUsername.start()
+		self.repermission_anon_channels.start()
 		await self.initAnon()
 		await self.cache_webhooks()  # Cache webhooks on bot start-up
+
+	@tasks.loop(minutes = 10)
+	async def repermission_anon_channels(self):
+		mainServer = await self.fetch_guild(config.mainServerId)
+		existing_category = None
+		for curGuild in self.guilds:
+			if curGuild.id == config.mainServerId:
+				for curCategory in curGuild.categories:
+					if curCategory.name.lower() == 'anon':
+						existing_category = curCategory
+						break
+
+		if existing_category:
+			for curChannel in existing_category.channels:
+				member_id = curChannel.name.split('_')[-1]
+				try:
+					member_id = int(member_id)
+					member = await mainServer.fetch_member(member_id)
+					overwrites = {
+						mainServer.default_role: discord.PermissionOverwrite(read_messages=False),
+						member: discord.PermissionOverwrite(read_messages=True)
+					}
+					await curChannel.edit(overwrites=overwrites)
+					print(f'Re-permissioned anon channel for {member.display_name}')
+				except (ValueError, discord.NotFound):
+					print(f"Invalid channel name or member not found: {curChannel.name}")
+
 
 	async def cache_webhooks(self):
 		for guild in self.guilds:
