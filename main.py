@@ -130,6 +130,12 @@ class Bot(discord.Client):
 			user_hashid = ''.join([(string.ascii_uppercase + string.ascii_lowercase + string.digits)[int(user_hash[i:i+2], 16) % 62] for i in range(0, 12, 2)])
 			anon_username = f"{user_hashid} anon"
 
+			# Check if the message is a reply
+			if curMessage.reference and curMessage.reference.resolved:
+				referenced_message = await curMessage.channel.fetch_message(curMessage.reference.message_id)
+				if referenced_message:
+					messageContent = f"> {referenced_message.content}\n{messageContent}"
+
 			# Send the message in all anon channels except the user's channel
 			print(f'sending anon msg {messageContent}')
 			for guild in self.guilds:
