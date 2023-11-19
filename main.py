@@ -198,7 +198,7 @@ class Bot(discord.Client):
 				webhook = await channel.create_webhook(name=self.anonWebhookName)
 			self.webhook_cache[channel.id] = webhook
 		print(f'sending anon msg {content} to channel {channel.name}')
-		await webhook.send(content, username=username, avatar_url=avatar_url)
+		await webhook.send(content, username=username, avatar_url=avatar_url, allowed_mentions=discord.AllowedMentions(roles=False, users=True, everyone=False))
 
 
 	@tasks.loop(minutes = 1)
