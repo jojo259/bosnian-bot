@@ -3,7 +3,7 @@ import json
 
 import config
 
-def doRequest(messagesList):
+def doRequest(messagesList, byUserId):
 
 	for message in messagesList:
 		if sorted(message.keys()) != sorted(['role', 'content']):
@@ -16,6 +16,10 @@ def doRequest(messagesList):
 		'Content-type': 'application/json',
 		'Authorization': f'Bearer {config.openAiKey}',
 	}
+
+	model = config.openAiGptModel
+	if byUserId in config.gptSpecialModelAccessIds:
+		model = config.openAiGptSpecialModel
 
 	reqBody = {
 		'model': config.openAiGptModel,

@@ -17,3 +17,5 @@ mainServerId = int(os.environ['mainserverid'])
 ephemeralChannelId = int(os.environ['ephemeralchannelid'])
 openAiKey = os.environ['openaikey']
 openAiGptModel = os.environ['openaigptmodel']
+openAiGptSpecialModel = os.environ['openaigptspecialmodel']
+gptSpecialModelAccessIds = os.environ['gptspecialmodelaccessids'].split(',')

@@ -23,7 +23,7 @@ async def checkReplace(bot, curMessage):
 
 	conversation = []
 	conversation.append(openairequester.constructMessage('system', requestPrompt))
-	apiResp = openairequester.doRequest(conversation)
+	apiResp = openairequester.doRequest(conversation, curMessage.author.id)
 
 	try:
 		apiRespMsg = json.loads(apiResp)['rewrittenMessage']
