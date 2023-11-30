@@ -100,9 +100,9 @@ class Bot(discord.Client):
 		if len(curMessage.content) == 0:
 			return
 
-		if curMessage.content[0] == self.commandPrefix:
-			curMessageSplit = curMessage.content.split()
+		curMessageSplit = curMessage.content.split()
 
+		if curMessage.content[0] == self.commandPrefix:
 			if curMessage.content[len(self.commandPrefix):] == "anon":
 				print('handling anon command')
 				await self.handle_anon_command(curMessage)
@@ -120,6 +120,10 @@ class Bot(discord.Client):
 								print(stackTraceStr)
 								await curMessage.reply(f'errored:\n{stackTraceStr}')
 							return
+
+		if curMessageSplit[-1] == 'emoji':
+			async with curMessage.channel.typing():
+				await commandslist.CommandTranslateEmojis().execute(self, curMessage, curMessageSplit)
 
 		if config.debugMode:
 			return

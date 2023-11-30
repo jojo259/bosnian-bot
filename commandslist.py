@@ -18,6 +18,16 @@ class CommandSetReplacePrompt(command.Command):
 		chatgptreplacer.userReplacePrompts[curMessage.author.id] = ' '.join(curMessageSplit[1:])
 		await curMessage.reply('set')
 
+
+class CommandTranslateEmojis(command.Command):
+
+
+	async def execute(self, bot, curMessage, curMessageSplit):
+		conversation = []
+		conversation.append(openairequester.constructMessage('system', f'Your task is to translate the user\'s message into emojis. You should reply with an appropriate number of emojis. If their message is simple then it will only require 1 emoji. Respond with ONLY emojis. The user said "{curMessage.content}".'))
+		apiResp = openairequester.doRequest(conversation, curMessage.author.id)
+		await curMessage.reply(apiResp[:2000])
+
 class CommandAskChatGpt(command.Command):
 
 
@@ -136,4 +146,5 @@ commandsList = {
 	CommandResetNames(): ['resetnames', 'resetname', 'reset'],
 	CommandAskChatGpt(): ['ask', 'chatgpt', 'query', 'question', 'q'],
 	CommandSetReplacePrompt(): ['setreplaceprompt', 'replaceprompt', 'setreplace', 'replace', 'rewrite'],
+	CommandTranslateEmojis(): [],
 }
