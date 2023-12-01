@@ -18,7 +18,7 @@ def doRequest(messagesList, byUserId):
 	}
 
 	model = config.openAiGptModel
-	if byUserId in config.gptSpecialModelAccessIds:
+	if str(byUserId) in config.gptSpecialModelAccessIds:
 		model = config.openAiGptSpecialModel
 
 	reqBody = {
