@@ -87,9 +87,6 @@ class Bot(discord.Client):
 		if curMessage.author == self.user:
 			return
 
-		if curMessage.author.bot:
-			return
-
 		if curMessage.webhook_id:
 			return
 
@@ -102,7 +99,7 @@ class Bot(discord.Client):
 
 		curMessageSplit = curMessage.content.split()
 
-		if curMessage.content[0] == self.commandPrefix:
+		if curMessage.content[0] == self.commandPrefix and not curMessage.author.bot:
 			if curMessage.content[len(self.commandPrefix):] == "anon":
 				print('handling anon command')
 				await self.handle_anon_command(curMessage)
@@ -128,7 +125,7 @@ class Bot(discord.Client):
 		if config.debugMode:
 			return
 
-		if curMessage.channel.category and curMessage.channel.category.name.lower() == 'anon':
+		if curMessage.channel.category and curMessage.channel.category.name.lower() == 'anon' and (curMessage.author.bot == False or curMessage.author.id == self.id):
 			messageContent = curMessage.content
 			user_hash = hashlib.sha256(f"{curMessage.author.id}{datetime.datetime.now().strftime('%Y-%m-%d %H')}".encode()).hexdigest()
 			user_hashid = ''.join([(string.ascii_uppercase + string.ascii_lowercase + string.digits)[int(user_hash[i:i+2], 16) % 62] for i in range(0, 12, 2)])
