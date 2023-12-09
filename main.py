@@ -11,6 +11,7 @@ import util
 import hashlib
 import string
 import urllib.parse
+import openairequester
 
 print("init")
 
@@ -227,10 +228,8 @@ class Bot(discord.Client):
 			await ephemeralChannel.send(stackTraceStr)
 
 
-	@tasks.loop(seconds = 1)
+	@tasks.loop(minutes = 10)
 	async def scrambleUsername(self):
-		if random.randint(1, 180) != 1:
-			return
 		print('scrambling username')
 		allMembers = []
 		for curGuild in bot.guilds:
@@ -238,11 +237,9 @@ class Bot(discord.Client):
 				for curMember in curGuild.members:
 					allMembers.append(curMember)
 		target = random.choice(allMembers)
-		switchIndex = random.randint(0, len(target.display_name) - 2)
-		newName = target.display_name[:switchIndex]
-		newName += target.display_name[switchIndex + 1]
-		newName += target.display_name[switchIndex]
-		newName += target.display_name[switchIndex + 2:]
+		conversation = []
+		conversation.append(openairequester.constructMessage('system', f'Your task is to replace this username with a new username that is slightly semantically different. Respond ONLY with the new username.\n"{target.display_name}"'))
+		newName = openairequester.doRequest(conversation, 0)
 		await util.renameMember(target, newName)
 
 
