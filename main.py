@@ -231,17 +231,20 @@ class Bot(discord.Client):
 	@tasks.loop(minutes = 10)
 	async def scrambleUsername(self):
 		print('scrambling username')
-		allMembers = []
-		for curGuild in bot.guilds:
-			if curGuild.id == config.mainServerId:
-				for curMember in curGuild.members:
-					allMembers.append(curMember)
-		target = random.choice(allMembers)
-		conversation = []
-		conversation.append(openairequester.constructMessage('system', f'Your task is to replace this username with a new username that is slightly semantically different. Respond ONLY with the new username.\n"{target.display_name}"'))
-		newName = openairequester.doRequest(conversation, 0)
-		await util.renameMember(target, newName)
-
+		try:
+			allMembers = []
+			for curGuild in bot.guilds:
+				if curGuild.id == config.mainServerId:
+					for curMember in curGuild.members:
+						allMembers.append(curMember)
+			target = random.choice(allMembers)
+			conversation = []
+			conversation.append(openairequester.constructMessage('system', f'Your task is to replace this username with a new username that is slightly semantically different. Respond ONLY with the new username.\n"{target.display_name}"'))
+			newName = openairequester.doRequest(conversation, 0)
+			await util.renameMember(target, newName)
+		except Exception as e:
+			stackTraceStr = traceback.format_exc()
+			print(stackTraceStr)
 
 	async def initAnon(self):
 
