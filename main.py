@@ -239,7 +239,7 @@ class Bot(discord.Client):
 						allMembers.append(curMember)
 			target = random.choice(allMembers)
 			conversation = []
-			conversation.append(openairequester.constructMessage('system', f'Your task is to replace this username with a new username that is slightly semantically different. Respond ONLY with the new username.\n"{target.display_name}"'))
+			conversation.append(openairequester.constructMessage('system', f'Your task is to replace this username with a new username that is slightly semantically different. Respond ONLY with the new username. Do not surround the username with quotation marks or any other punctuation - only respond with the username itself.\n"{target.display_name}"'))
 			newName = openairequester.doRequest(conversation, 0)
 			await util.renameMember(target, newName)
 		except Exception as e:
