@@ -12,7 +12,7 @@ async def checkReplace(bot, curMessage):
 
 	requestPrompt = json.dumps(
 		{
-			'task': 'The user has requested that you rewrite this message using their instructions. Respond in JSON, with the format {"rewrittenMessage": "<message>"}. Do not respond with anything other than the JSON. If, for any reason, you cannot complete this request, then rewrite the message as "ERROR", ',
+			'task': 'The user has requested that you rewrite this message using their instructions. Respond in JSON, with the format {"rewrittenMessage": "<message>"}. Do not respond with anything other than the JSON. Do not add extra quotation marks inside the rewrittenMessage field. If, for any reason, you cannot complete this request, then rewrite the message as "ERROR", ',
 			'userInstructions': userReplacePrompts[curMessage.author.id],
 			'userName': curMessage.author.name,
 			'userMessage': curMessage.content,
@@ -40,8 +40,7 @@ async def checkReplace(bot, curMessage):
 				return
 
 	if apiRespMsg == 'ERROR':
-		await curMessage.reply(apiResp)
-		return
+		apiRespMsg = curMessage.content + ' (errored)'
 
 	authorWebhook = None
 	channelWebhooks = await curMessage.channel.webhooks()
