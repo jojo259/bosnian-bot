@@ -6,6 +6,7 @@ import datetime
 import command
 import openairequester
 import chatgptreplacer
+import time
 
 class CommandSetReplacePrompt(command.Command):
 
@@ -30,13 +31,30 @@ class CommandTranslateEmojis(command.Command):
 
 class CommandAskChatGpt(command.Command):
 
+	wpm = 250
+	cpm = wpm * 5
+	cps = cpm / 60
 
 	async def execute(self, bot, curMessage, curMessageSplit):
 		conversation = []
-		conversation.append(openairequester.constructMessage('system', 'You are a helpful assistant.\nRespond very concisely.\nRespond with Discord markdown.\nUse a lot of funny emojis and try to be quirky.'))
+		conversation.append(openairequester.constructMessage('system', 'You are a helpful assistant.\nRespond very concisely.\nRespond with plain sentences only - do not add any extra formatting like lists or markdown and do not use any newlines.\nAlways use full-stops/periods (.) or question marks (?) or exclamation marks (!) at the end of sentences.\nUse a lot of funny emojis and try to be quirky.\nDo not put any emojis at the end of sentences - use emojis ONLY between words.'))
 		conversation.append(openairequester.constructMessage('user', ' '.join(curMessageSplit[1:])))
+
+		apiStartTime = time.time()
 		apiResp = openairequester.doRequest(conversation, curMessage.author.id)
-		await curMessage.reply(apiResp[:2000])
+		apiEndTime = time.time()
+		apiRespDuration = apiEndTime - apiStartTime
+
+		sentences = re.findall(r'[^.!?]+[.!?]+', apiResp)
+
+		async with curMessage.channel.typing():
+			time.sleep(max(0, random.uniform(-0.5, 0.5) + len(sentences[0]) / CommandAskChatGpt.cps - apiRespDuration))
+			await curMessage.reply(sentences[0])
+
+		for sentence in sentences[1:]:
+			async with curMessage.channel.typing():
+				time.sleep(max(0, random.uniform(-0.5, 0.5) + len(sentence) / CommandAskChatGpt.cps))
+				await curMessage.channel.send(sentence)
 
 class CommandSetName(command.Command):
 
