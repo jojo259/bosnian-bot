@@ -26,7 +26,7 @@ class CommandTranslateEmojis(command.Command):
 		conversation = []
 		conversation.append(openairequester.constructMessage('system', f'Your task is to translate the user\'s message into emojis. You should reply with an appropriate number of emojis. If their message is simple then it will only require 1 emoji. Respond with ONLY emojis. The user said "{curMessage.content}".'))
 		apiResp = openairequester.doRequest(conversation, curMessage.author.id)
-		await curMessage.reply(apiResp[:2000])
+		await curMessage.channel.send(apiResp[:2000])
 
 class CommandAskChatGpt(command.Command):
 
