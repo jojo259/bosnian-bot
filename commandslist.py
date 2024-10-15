@@ -7,6 +7,8 @@ import command
 import openairequester
 import chatgptreplacer
 import time
+import imagegen
+import os
 
 class CommandSetReplacePrompt(command.Command):
 
@@ -157,6 +159,26 @@ class CommandResetNames(command.Command):
 
 		await curMessage.reply('reset')
 
+class CommandGenerateImage(command.Command):
+
+	async def execute(self, bot, curMessage, curMessageSplit):
+		prompt = ' '.join(curMessageSplit[1:])
+		print(f'Generating image with prompt: {prompt}')
+		
+		# Generate the image and get the file paths
+		image_file_name = imagegen.generateImage(prompt)
+
+		# Send the image file as a reply
+		with open(image_file_name, 'rb') as img_file:
+			discord_file = discord.File(img_file, filename=image_file_name)
+			await curMessage.reply(file=discord_file)
+		
+		# Optionally, delete the image file after sending
+		if os.path.exists(image_file_name):
+			os.remove(image_file_name)
+			print(f'Deleted the image: {image_file_name}')
+
+
 commandsList = {
 	CommandSetName(): ['setname', 'name', 'rename', 'nick', 'renick', 'nickname', 'setnick'],
 	CommandPartyMode(): ['partymode', 'party'],
@@ -165,4 +187,5 @@ commandsList = {
 	CommandAskChatGpt(): ['ask', 'chatgpt', 'query', 'question', 'q'],
 	CommandSetReplacePrompt(): ['setreplaceprompt', 'replaceprompt', 'setreplace', 'replace', 'rewrite'],
 	CommandTranslateEmojis(): [],
+	CommandGenerateImage(): ['generate', 'gen', 'g', 'image', 'img', 'create'],
 }
