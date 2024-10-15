@@ -168,10 +168,10 @@ class CommandGenerateImage(command.Command):
 		# Generate the image and get the file paths
 		image_file_name = imagegen.generateImage(prompt)
 
-		# Send the image file as a reply
+		# Send the image file as a spoiler with a warning message
 		with open(image_file_name, 'rb') as img_file:
-			discord_file = discord.File(img_file, filename=image_file_name)
-			await curMessage.reply(file=discord_file)
+			discord_file = discord.File(img_file, filename=f"SPOILER_{image_file_name}")
+			await curMessage.reply(content="# :warning: **WARNING NSFW GROSS IMAGE DO NOT CLICK SERIOUSLY** :warning:", file=discord_file)
 		
 		# Optionally, delete the image file after sending
 		if os.path.exists(image_file_name):
