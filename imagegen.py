@@ -20,7 +20,7 @@ def generateImage(prompt):
 		"request": {
 			"prompt": prompt,
 			"model_name": "epicrealism_naturalSinRC1VAE_106430.safetensors",
-			"negative_prompt": "",
+			"negative_prompt": "nudity, naked, sex",
 			"width": 1024,
 			"height": 1024,
 			"image_num": 1,
