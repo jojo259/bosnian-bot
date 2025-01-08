@@ -9,6 +9,16 @@ import chatgptreplacer
 import time
 import imagegen
 import os
+import config
+
+class CommandSetAnonStyle(command.Command):
+
+
+	async def execute(self, bot, curMessage, curMessageSplit):
+		old_style = config.anonPromptStyle
+		config.anonPromptStyle = ' '.join(curMessageSplit[1:])
+		await curMessage.reply(f'changed anon style from `{old_style}` to `{config.anonPromptStyle}`')
+
 
 class CommandSetReplacePrompt(command.Command):
 
@@ -186,6 +196,7 @@ commandsList = {
 	CommandResetNames(): ['resetnames', 'resetname', 'reset'],
 	CommandAskChatGpt(): ['ask', 'chatgpt', 'query', 'question', 'q'],
 	CommandSetReplacePrompt(): ['setreplaceprompt', 'replaceprompt', 'setreplace', 'replace', 'rewrite'],
+	CommandSetAnonStyle(): ['style'],
 	CommandTranslateEmojis(): [],
 	CommandGenerateImage(): ['generate', 'gen', 'g', 'image', 'img', 'create'],
 }
