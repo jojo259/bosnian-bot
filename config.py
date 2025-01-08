@@ -20,3 +20,4 @@ openAiGptModel = os.environ['openaigptmodel']
 openAiGptSpecialModel = os.environ['openaigptspecialmodel']
 gptSpecialModelAccessIds = os.environ['gptspecialmodelaccessids'].split(',')
 imageGenApiKey = os.environ['imagegenapikey']
+anonPromptStyle = os.environ['anonpromptstyle']

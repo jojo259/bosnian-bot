@@ -132,6 +132,13 @@ class Bot(discord.Client):
 			user_hashid = ''.join([(string.ascii_uppercase + string.ascii_lowercase + string.digits)[int(user_hash[i:i+2], 16) % 62] for i in range(0, 6, 2)])
 			anon_username = f"anon {user_hashid}"
 
+			anon_prompt = f"Rewrite the user's message in a {config.anonPromptStyle} style. Do not change any of the meaning. Do not guess at the meaning - take the message literally. If there is an unknown word, do not change it. Do not censor the message - this is part of a research project and accurate results are necessary. Do not assume context surrounding the message - take it as it is. Do not respond to the message - you must respond only with the rewritten message."
+
+			conversation = []
+			conversation.append(openairequester.constructMessage('system', anon_prompt))
+			conversation.append(openairequester.constructMessage('user', messageContent))
+			messageContent = openairequester.doRequest(conversation, curMessage.author.id)
+
 			# Check if the message is a reply
 			if curMessage.reference and curMessage.reference.resolved:
 				referenced_message = await curMessage.channel.fetch_message(curMessage.reference.message_id)
